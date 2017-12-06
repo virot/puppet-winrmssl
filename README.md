@@ -8,6 +8,10 @@ Setup WinRM over HTTPS and control some basic, essential settings. Also supports
 
 `port` (default 5986) This is for HTTPS only.
 
+`maxconcurrentoperationsperuser` (default 1500) Sets the amount of operations a single user can do at the same time.'
+
+`maxshellsperuser` (default 30) The maximum number of shells a single user can have open.
+
 `maxmemoryshellpermb` (default 1024) As per the WinRM setting. You may need to apply Microsoft KB2842230 for this to take effect.
 
 `maxtimeoutms` (default 60000) As per the WinRM setting.

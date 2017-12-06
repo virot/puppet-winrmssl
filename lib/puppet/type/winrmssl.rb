@@ -44,6 +44,21 @@ Puppet::Type.newtype(:winrmssl) do
     defaultto :true
   end
 
+  newproperty(:maxconcurrentoperationsperuser) do
+    desc 'Sets the amount of operations a single user can do at the same time.'
+    defaultto '1500'
+  end
+
+  newproperty(:maxshellsperuser) do
+    desc 'Sets the maximum number of shells a single user can have open.'
+    validate do |value|
+      unless (1..2_147_483_647).cover?(value)
+        raise ArgumentError, '%s is not a valid value for max shells per user.' % value
+      end
+    end
+    defaultto '30'
+  end
+
   newproperty(:maxmemorypershellmb) do
     defaultto '1024'
   end

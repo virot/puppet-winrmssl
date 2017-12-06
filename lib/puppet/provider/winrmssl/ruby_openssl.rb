@@ -167,6 +167,42 @@ Puppet::Type.type(:winrmssl).provide(:ruby_openssl) do
     var_state
   end
 
+  def maxconcurrentoperationsperuser
+    var_cmd = 'winrm.cmd get winrm/config/service'
+    var_rgx = %r{MaxConcurrentOperationsPerUser = ([0-9]{1,})$}
+
+    stdin, stdout, _stderr, wait_thr = Open3.popen3(var_cmd)
+    stdin.close
+    wait_thr.value.exitstatus
+    var_stdout = stdout.read
+
+    rgx_mth = var_rgx.match(var_stdout)
+    var_state = if !rgx_mth.nil?
+                  rgx_mth[1]
+                else
+                  ''
+                end
+    var_state
+  end
+
+  def maxshellsperuser
+    var_cmd = 'winrm.cmd get winrm/config/winrs'
+    var_rgx = %r{MaxShellsPerUser = ([0-9]{1,})$}
+
+    stdin, stdout, _stderr, wait_thr = Open3.popen3(var_cmd)
+    stdin.close
+    wait_thr.value.exitstatus
+    var_stdout = stdout.read
+
+    rgx_mth = var_rgx.match(var_stdout)
+    var_state = if !rgx_mth.nil?
+                  rgx_mth[1]
+                else
+                  ''
+                end
+    var_state
+  end
+
   def maxmemorypershellmb
     var_cmd = 'winrm.cmd get winrm/config/winrs'
     var_rgx = %r{MaxMemoryPerShellMB = ([0-9]{1,})$}
@@ -246,6 +282,20 @@ Puppet::Type.type(:winrmssl).provide(:ruby_openssl) do
 
   def auth_negotiate=(var_param)
     var_cmd = "winrm set winrm/config/service/auth @{Negotiate=\"#{var_param}\"}"
+    stdin, _stdout, _stderr, wait_thr = Open3.popen3(var_cmd)
+    stdin.close
+    wait_thr.value.exitstatus
+  end
+
+  def maxconcurrentoperationsperuser=(var_param)
+    var_cmd = "winrm set winrm/config/service @{MaxConcurrentOperationsPerUser=\"#{var_param}\"}"
+    stdin, _stdout, _stderr, wait_thr = Open3.popen3(var_cmd)
+    stdin.close
+    wait_thr.value.exitstatus
+  end
+
+  def maxshellsperuser=(var_param)
+    var_cmd = "winrm set winrm/config/winrs @{MaxShellsPerUser=\"#{var_param}\"}"
     stdin, _stdout, _stderr, wait_thr = Open3.popen3(var_cmd)
     stdin.close
     wait_thr.value.exitstatus
