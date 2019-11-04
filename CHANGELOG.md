@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+
+
+## Release 2.0.0
+
+**Features**
+Added PDK support.
+Added unit tests.
+
 ## Release 0.1.0
 
 **Features**
