@@ -231,18 +231,21 @@ Puppet::Type.type(:winrmssl).provide(:ruby_openssl) do
     exitstatus
   end
 
-  def certificatethumbprint=(_var_param)
-    # ignore the passed-in value
-
-    var_thumbprint = _thumbprint
-
-    var_cmd = "winrm create winrm/config/listener?Address=*+Transport=HTTPS @{Hostname=\"#{Facter['fqdn'].value}\";CertificateThumbprint=\"#{var_thumbprint}\";Port=\"#{@resource[:port]}\"}"
+  def certificatethumbprint=(var_param)
+    var_cmd = "winrm set winrm/config/listener?Address=*+Transport=HTTPS @{CertificateThumbprint=\"#{var_param}\"}"
     _, exitstatus = exec_call(var_cmd)
     exitstatus
   end
 
   ## implements
   def create
+    var_thumbprint = _thumbprint
+    var_cmd = "winrm create winrm/config/listener?Address=*+Transport=HTTPS @{Hostname=\"#{Facter['fqdn'].value}\";CertificateThumbprint=\"#{var_thumbprint}\"}"
+    stdout_str, exitstatus = exec_call(var_cmd)
+    if exitstatus != 0
+      raise Puppet::ResourceError, "Couldn't create the listener: #{stdout_str}."
+    end
+
     var_properties2ignore = [caller_locations(1, 1)[0].label]
 
     @resource.properties.each do |var_property|
