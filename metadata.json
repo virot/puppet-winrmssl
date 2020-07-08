@@ -1,6 +1,6 @@
 {
   "name": "nekototori-winrmssl",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "new23d, jpuskar, nekototori",
   "summary": "Setup WinRM over HTTPS and control some basic, essential settings. Also supports Puppet CA issued certificates.",
   "license": "Apache-2.0",
