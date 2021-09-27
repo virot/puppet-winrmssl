@@ -31,6 +31,7 @@ Puppet::Type.type(:winrmssl).provide(:ruby_openssl) do
     issuer_subject.gsub!(%r{^.*$}, '\&*')
 
     var_cmd = "powershell @(get-childitem certificate::localmachine/my ^| where-object { $_.issuer -like '#{issuer_subject}'" \
+      " -and (($_.Extensions|Where-Object{$_.gettype().Name -eq 'X509EnhancedKeyUsageExtension'}).EnhancedKeyUsages|?{$_.value -eq '1.3.6.1.5.5.7.3.1'}) -ne $Null " \
       " -and $_.subject -eq 'CN=#{Facter['fqdn'].value}' -and $_.hasprivatekey} ^| sort-object -property notafter -descending)[0].thumbprint"
     stdout_str, = exec_call(var_cmd)
     var_stdout_raw = stdout_str
